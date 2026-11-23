@@ -96,9 +96,22 @@ not enforced by a compiler.
 
 ## Java
 
-_To be added by teammate: run instructions and paradigm explanation
-(imperative + functional interface, e.g. `IntUnaryOperator` /
-`Function<Integer, Integer>`)._
+### Requirements
+- Java 8 or newer (JDK). No external libraries.
+
+### Run
+cd java
+javac MyMap.java MyMapTest.java
+java MyMap        # demo program
+java MyMapTest    # tests
+
+### Paradigm: imperative + functional interface
+Java is an imperative, object-oriented, statically typed language. Since Java 8
+it supports functional style through functional interfaces and lambdas.
+`myMap` takes an `IntUnaryOperator` (an `int -> int` function) as a parameter,
+which makes it a higher-order function. Inside, it uses an imperative `for`
+loop to build and return a new `ArrayList`, so the original list is never
+modified. The type system enforces the `Int -> Int` contract at compile time.
 
 ---
 
