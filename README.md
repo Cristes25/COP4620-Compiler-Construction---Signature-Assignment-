@@ -11,7 +11,9 @@ never modified.
 ├── python/     # Python implementation
 │   ├── my_map.py        # myMap + demo program
 │   └── test_my_map.py   # unit tests
-└── haskell/    # Haskell implementation (teammate)
+└── haskell/    # Haskell implementation
+    ├── MyMap.hs         # myMap + demo program
+    └── MyMapTest.hs     # unit tests
 ```
 
 ---
@@ -117,6 +119,74 @@ modified. The type system enforces the `Int -> Int` contract at compile time.
 
 ## Haskell
 
-_To be added by teammate: run instructions and paradigm explanation
-(pure functional, type signature `(Int -> Int) -> [Int] -> [Int]`,
-recursion with pattern matching or a fold)._
+### Requirements
+- GHC (Glasgow Haskell Compiler) and `runghc` (tested with GHC 9.x / 8.x in Ubuntu WSL). No external packages required.
+
+### Run
+Interpreted mode (fastest, no build artifacts):
+```bash
+cd haskell
+runghc MyMap.hs
+```
+
+Or compiled to a native binary:
+```bash
+cd haskell
+ghc -o MyMap MyMap.hs
+./MyMap
+```
+
+Expected output:
+```
+Input:            [1, 2, 3, 4, 5]
+square:           [1, 4, 9, 16, 25]
+double:           [2, 4, 6, 8, 10]
+addTen:           [11, 12, 13, 14, 15]
+lambda x -> x-1:  [0, 1, 2, 3, 4]
+negatives square: [9, 4, 1, 0]
+empty list:       []
+Original after:   [1, 2, 3, 4, 5]
+```
+
+### Test
+Interpreted mode:
+```bash
+cd haskell
+runghc -i. MyMapTest.hs
+```
+
+Or compiled to a native binary:
+```bash
+cd haskell
+ghc -i. -o MyMapTest MyMapTest.hs
+./MyMapTest
+```
+
+### Implementation
+```haskell
+myMap :: (Int -> Int) -> [Int] -> [Int]
+myMap _    []     = []
+myMap func (x:xs) = func x : myMap func xs
+```
+
+- Implemented using **pattern matching** and **explicit structural recursion** over lists.
+- **Base case**: `myMap _ [] = []` handles the empty list.
+- **Recursive case**: `myMap func (x:xs) = func x : myMap func xs` applies `func` to the head element `x` and recursively processes the tail `xs`, prepending results with the cons operator (`:`).
+- Custom formatting function `formatList` uses `intercalate ", "` to match the exact string output of Java's `List.toString()` and Python's `format_list`.
+
+### Paradigm: pure functional programming with immutability and pattern matching
+Haskell is a purely functional, statically typed, and lazy language.
+- **Pure Functions & Immutability**: Values in Haskell are strictly immutable. There is no concept of in-place mutation or side effects; `myMap` produces a brand-new list without altering the original list.
+- **First-Class & Higher-Order Functions**: Functions are first-class values that can be passed as arguments, returned, or created inline with anonymous lambdas (`\x -> x - 1`). `myMap` takes another function as its first argument, adhering to the type signature `(Int -> Int) -> [Int] -> [Int]`.
+- **Declarative Recursion & Pattern Matching**: Instead of imperative stateful loops (`for`/`while`) or index management, Haskell expresses algorithms through pattern matching on data constructors (`[]` and `(:)`).
+- **Compile-Time Type Safety**: Haskell's strong static type system enforces the function contract at compile time, guaranteeing that only functions compatible with `Int -> Int` and lists of type `[Int]` are accepted.
+
+---
+
+## Build Artifacts & Git Configuration (.gitignore)
+
+To maintain a clean repository and ensure that only source code is tracked in GitHub, `.gitignore` was updated with the following rationale:
+
+1. **Platform-Independent Source Control**: Compiling code in Haskell (`ghc`) generates machine-specific binary executables (`haskell/MyMap` and `haskell/MyMapTest` without file extensions in Linux/WSL, or `.exe` on Windows). Binary executables are large, non-portable between operating systems, and should never be stored in Git.
+2. **Intermediate Compiler Outputs**: GHC produces interface files (`*.hi`, `*.dyn_hi`) and object files (`*.o`, `*.dyn_o`) during compilation. Ignoring these ensures working directories remain clutter-free.
+3. **Cross-Language Isolation**: The exclusion rules for executables are explicitly scoped (e.g., `haskell/MyMap`), ensuring that existing and future source files across Java (`.java`), Python (`.py`), and Haskell (`.hs`) are safely tracked without conflicts.
