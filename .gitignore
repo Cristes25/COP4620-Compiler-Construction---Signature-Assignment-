@@ -1,5 +1,21 @@
+# Python
 __pycache__/
 *.pyc
+
+# Java
 *.class
+
+# Haskell build artifacts
 *.hi
 *.o
+*.dyn_hi
+*.dyn_o
+
+# Haskell executables / binaries
+haskell/MyMap
+haskell/MyMapTest
+*.exe
+*.out
+
+# OS
+.DS_Store
