@@ -7,7 +7,7 @@ never modified.
 
 ```
 .
-├── java/       # Java implementation   (teammate)
+├── java/       # Java implementation   
 ├── python/     # Python implementation
 │   ├── my_map.py        # myMap + demo program
 │   └── test_my_map.py   # unit tests
